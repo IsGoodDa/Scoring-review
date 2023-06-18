@@ -1,4 +1,9 @@
-### 以下是Java代码的一个示例；The following is an example of Java code：
+### 评分审核模块是发展性测评系统中的一个关键模块，提供了对用户提交的评价数据进行审核和管理的功能。管理员可以方便地对提交的评价数据进行审核和修改，并且可以根据需要进行统计和分析。这个模块可以有效地提高数据的准确性和安全性，保障测评结果的客观性和公正性。
+
+## The rating review module is a key module in the developmental assessment system, providing the ability to review and manage user-submitted evaluation data. Administrators can easily review and modify submitted review data, and can perform statistics and analysis as needed. This module can effectively improve the accuracy and safety of data, and ensure the objectivity and fairness of assessment results.
+
+### 以下是Java代码的一个示例；
+## The following is an example of Java code：
 
 import java.sql.Connection;
 
@@ -144,7 +149,7 @@ public class ScoreAudit {
     }
 }
 
-<body>
+# <body>
   <header>
     <div class="logo">My Github Page</div>
     <nav>
