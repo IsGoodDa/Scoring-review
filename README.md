@@ -155,83 +155,137 @@ public class KxScoreRecordController extends BaseController {
      * 查询学生评价记录
      */
     //@RequiresPermissions("kx:ScoreRecord:list")
+    
     @PostMapping("/select")
+    
     @ResponseBody
+    
     public AjaxResult select(KxScoreRecord kxScoreRecord) {
+    
         List<KxScoreRecord> list = kxScoreRecordService.selectKxScoreRecordList(kxScoreRecord);
+        
         return success().put("detail", list.size()).put("rows", list);
+        
     }
 
     /**
      * 查询学生评价记录
      */
     //@RequiresPermissions("kx:ScoreRecord:list")
+    
     @GetMapping("/teacherSelect")
+    
     @ResponseBody
+    
     public AjaxResult select1(Long classId) {
+    
         List<KxScoreRecord> list = kxScoreRecordMapper.selectKxScoreRecordByClassId(classId);
+        
 
         //不查询老师的的评价记录
+        
         list = list.stream().filter(kxScoreRecord1 -> !kxScoreRecord1.getVerify().equals("教师")).collect(Collectors.toList());
+        
         return success().put("detail", list.size()).put("rows", list);
+        
     }
 
     @Autowired
+    
     KxTeacherMapper kxTeacherMapper;
 
 
     @GetMapping("/sort/{classId}/{type}/{id}")
+    
     @ResponseBody
+    
     public AjaxResult sort(@PathVariable Long classId, @PathVariable String type, @PathVariable Long id) {
+    
         List<KxStudent> kxStudents = kxStudentMapper.selectKxStudentByClassId(classId);
+        
 //        KxTimingRate kxTimingRate = kxTimingRateMapper.selectKxTimingRateNow();
+
         KxTiming kxTiming = kxTimingMapper.selectKxTimingByNow();
+        
         ArrayList<ScoreSort> scoreSorts = new ArrayList<>();
+        
         for (KxStudent kxStudent : kxStudents) {
+        
             ScoreSort scoreSort = kxScoreRecordMapper.selectKxScoreRecordBySort(kxStudent.getId(), type, id, kxTiming.getId());
+            
             DecimalFormat df = new DecimalFormat("#.##"); // 创建 DecimalFormat 对象，指定格式为保留最多两位小数
+            
             df.setRoundingMode(RoundingMode.DOWN); // 设置舍入模式为向下舍入
+            
             float rounded;
+            
 
 
             boolean NoType = !type.equals("A") && !type.equals("B") && !type.equals("D");
+            
             if (type.equals("A") && id == 2 || type.equals("B") && id == 6) {
+            
                 float v = kxRateOftenMapper.selectKxScoreOftenAvRate(kxStudent.getId(), kxTiming.getId());
+                
                 rounded = Float.parseFloat(df.format(scoreSort.getScore() + v)); // 格式化小数部分并将结果转换为 float 类型
+                
 
             } else if (NoType) {
+            
                 float v = kxRateOftenMapper.selectKxScoreOftenAvRate(kxStudent.getId(), kxTiming.getId());
+                
                 rounded = Float.parseFloat(df.format(scoreSort.getScore() + v)); // 格式化小数部分并将结果转换为 float 类型
+                
             } else {
+            
                 rounded = Float.parseFloat(df.format(scoreSort.getScore())); // 格式化小数部分并将结果转换为 float 类型
+                
             }
 
             if (type.equals("D") && id == 19) {
+            
                 float v = kxRateOftenMapper.selectKxScoreOftenAvRateByRateIdAndStudentId(kxStudent.getId(), kxTiming.getId(), 19L);
+                
                 rounded = Float.parseFloat(df.format(v));
+                
             }
 
             if (type.equals("D") && id == 20) {
+            
                 float v = kxRateOftenMapper.selectKxScoreOftenAvRateByRateIdAndStudentId(kxStudent.getId(), kxTiming.getId(), 20L);
+                
                 rounded = Float.parseFloat(df.format(v));
+                
             }
 
             if (type.equals("D") && id == 21) {
+            
                 float v = kxRateOftenMapper.selectKxScoreOftenAvRateByRateIdAndStudentId(kxStudent.getId(), kxTiming.getId(), 21L);
+                
                 rounded = Float.parseFloat(df.format(v));
+                
             }
 
             String result = df.format(rounded);
+            
             scoreSort.setStudentName(kxStudent.getName());
+            
             scoreSort.setImagePath(kxStudent.getImagePath());
+            
             scoreSort.setScore(Float.parseFloat(result));
+            
             KxMark kxMark = kxStudent.getKxMark();
+            
 
             if (kxMark != null) {
+            
                 char firstChar = kxStudent.getClasses().getName().charAt(0);
+                
                 if (firstChar == '一' || firstChar == '二') {
+                
 
                     if (NoType) {
+                    
                         scoreSort.setScore(changeFloat(scoreSort.getScore() + getRateMarkScore(kxMark.getMoralScore(), true).floatValue() + getRateMarkScore(kxMark.getChineseScore(), true).floatValue() + getRateMarkScore(kxMark.getMathScore(), true).floatValue() + getRateMarkScore(kxMark.getScienceScore(), true).floatValue() + getRateMarkScore(kxMark.getPhysicalScore(), true).floatValue() + getRateMarkScore(kxMark.getArtScore(), true).floatValue() + getRateMarkScore(kxMark.getMusicScore(), true).floatValue() + getRateMarkScore(kxMark.getLaoDongScore(), true).floatValue()
 //                                       getRateMarkScore(kxMark.getEnglishScore(), true).floatValue()
                         ));
