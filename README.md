@@ -62,53 +62,93 @@ import java.util.stream.Collectors;
 
 
 /**
+
  * 评价记录Controller
+ * 
  *
  * @author huang
+ * 
  * @date 2023-02-12
+ * 
  */
 @Controller
+
 @RequestMapping("/kx/ScoreRecord")
+
 public class KxScoreRecordController extends BaseController {
+
     private final String prefix = "kx/ScoreRecord";
+    
     @Autowired
+    
     KxScoreRecordMapper kxScoreRecordMapper;
+    
     @Autowired
+    
     KxStudentMapper kxStudentMapper;
+    
     @Autowired
+    
     KxTimingRateMapper kxTimingRateMapper;
+    
     @Autowired
+    
     KxRateRulesMapper kxRateRulesMapper;
+    
     @Autowired
+    
     KxScoreRecordMapper scoreRecordMapper;
+    
     /**
+    
      * 修改保存评价记录
+     
      */
 
     @Autowired
+    
     KxRateOftenMapper kxRateOftenMapper;
+    
     @Autowired
+    
     KxClassesMapper kxClassesMapper;
+    
     @Autowired
+    
     KxTimingMapper kxTimingMapper;
+    
     @Autowired
+    
     private IKxScoreRecordService kxScoreRecordService;
 
     @Autowired
+    
     KxClassesAllotMapper kxClassesAllotMapper;
+    
 
 
     /**
+    
      * 查询评价记录列表
+     
      */
+     
     //@RequiresPermissions("kx:ScoreRecord:list")
+    
     @PostMapping("/list")
+    
     @ResponseBody
+    
     public TableDataInfo list(KxScoreRecord kxScoreRecord) {
+    
         startPage();
+        
         List<KxScoreRecord> list = kxScoreRecordService.selectKxScoreRecordList(kxScoreRecord);
+        
 //        logger.info("list111:{}",list);
+
         return getDataTable(list);
+        
     }
 
     /**
